@@ -13,10 +13,11 @@ def init_browser():
 # Full Scrape function.
 def scrape():
 
-    """ NASA Mars News """
     # Connect to Mars News Site
     browser = init_browser()
-
+    
+    """ NASA Mars News """
+    # Visit to Mars News Site
     mars_news_url = "http://redplanetscience.com"
     browser.visit(mars_news_url)
 
@@ -36,13 +37,8 @@ def scrape():
     news_paragraph = news_paragraph.text.strip()
     print(news_paragraph)
 
-    # Exit Browser
-    browser.quit()
-
     """ JPL Mars Space Images - Featured Image """
     # Connect to the image URL
-    browser = init_browser()
-
     mars_featured_image_url = "http://spaceimages-mars.com/"
     browser.visit(mars_featured_image_url)
 
@@ -56,9 +52,6 @@ def scrape():
     featured_image = image_soup.find("img", class_ = "headerimage fade-in")
     featured_image_url = mars_featured_image_url + featured_image["src"]
     print(featured_image_url)
-
-    # Exit Browser
-    browser.quit()
 
     """ Mars Facts """
     # URL for Mars Facts.
@@ -74,9 +67,6 @@ def scrape():
     mars_facts = mars_facts_df.to_html(header = True, index = True)
 
     """ Mars Hemispheres """
-    # Run init_browser/driver
-    browser = init_browser()
-
     # Visit the url for Mars Hemisphere
     mars_hemispheres_url = "http://marshemispheres.com/"
     browser.visit(mars_hemispheres_url)
@@ -91,18 +81,12 @@ def scrape():
     # Locate all 4 elements and store in variable
     hems_url = hemispheres_soup.find_all("div", class_ = "item")
 
-    # Exit Browser
-    browser.quit()
-
     # Create empty list for each Hemisphere URL
     hemis_url = []
 
     for hem in hems_url:
         hem_url = hem.find("a")["href"]
         hemis_url.append(hem_url)
-
-    # Exit Browser
-    browser.quit()
 
     # Create list of dictionaries called hemisphere_image_urls
     hemisphere_image_urls = []
@@ -112,29 +96,28 @@ def scrape():
         mars_hem_url = mars_hemispheres_url + hemi
         print(mars_hem_url)
         
-        # Run init_browser/driver.
-        browser = init_browser()
+        # Visit to Hemisphere
         browser.visit(mars_hem_url)
         
-        # HTML Object.
+        # HTML Object
         html = browser.html
 
         # Parse HTML with Beautiful Soup
         hemi_soup = bs(html, "html.parser")
 
-        # Locate each title and save to raw_title, to be cleaned.
-        raw_title = hemi_soup.find("h2", class_="title").text
+        # Locate each title and save to raw_title, to be cleaned
+        raw_title = hemi_soup.find("h2", class_ = "title").text
         
-        # Remove " Enhanced" tag text from each "title" via split on " Enhanced".
+        # Remove " Enhanced" tag text from each "title" via split on " Enhanced"
         title = raw_title.split(" Enhanced")[0]
         
-        # Locate each full resolution image for all 4 Hemisphere URLs.
+        # Locate each full resolution image for all 4 Hemisphere URLs
         img_url = hemi_soup.find("img", class_ = "wide-image")["src"]
         
-        # Append both title and img_url to "hemisphere_image_url".
+        # Append title and img_url to "hemisphere_image_url"
         hemisphere_image_urls.append({"title": title, "img_url": mars_hemispheres_url + img_url})
-        
-        # Exit Browser
-        browser.quit()
 
-        print(hemisphere_image_urls)
+    # Exit Browser
+    browser.quit()
+
+    print(hemisphere_image_urls)
