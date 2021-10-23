@@ -118,14 +118,14 @@ for hemi in hemis_url:
     # Locate each title and save to raw_title, to be cleaned.
     raw_title = hemi_soup.find("h2", class_="title").text
     
-    # Remove ' Enhanced' tag text from each "title" via split on ' Enhanced'.
-    title = raw_title.split(' Enhanced')[0]
+    # Remove " Enhanced" tag text from each "title" via split on " Enhanced".
+    title = raw_title.split(" Enhanced")[0]
     
-    # Locate each 'full.jpg' for all 4 Hemisphere URLs.
-    img_url = hemi_soup.find("img", class_ = "wide-image")['src']
+    # Locate each full resolution image for all 4 Hemisphere URLs.
+    img_url = hemi_soup.find("img", class_ = "wide-image")["src"]
     
-    # Append both title and img_url to 'hemisphere_image_url'.
-    hemisphere_image_urls.append({'title': title, 'img_url': mars_hemispheres_url + img_url})
+    # Append both title and img_url to "hemisphere_image_url".
+    hemisphere_image_urls.append({"title": title, "img_url": mars_hemispheres_url + img_url})
     
     # Exit Browser
     browser.quit()
