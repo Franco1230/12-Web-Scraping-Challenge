@@ -3,12 +3,14 @@ import pandas as pd
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
 from webdriver_manager.chrome import ChromeDriverManager
+from pprint import pprint
 
 # Define function to choose the executable path
 def init_browser():
     executable_path = {"executable_path": ChromeDriverManager().install()}
     return Browser("chrome", **executable_path, headless = False)
 
+""" NASA Mars News """
 # Connect to Mars News Site
 browser = init_browser()
 
@@ -34,6 +36,7 @@ print(news_paragraph)
 # Exit Browser
 browser.quit()
 
+""" JPL Mars Space Images - Featured Image """
 # Connect to the image URL
 browser = init_browser()
 
@@ -53,3 +56,78 @@ print(featured_image_url)
 
 # Exit Browser
 browser.quit()
+
+""" Mars Facts """
+# URL for Mars Facts.
+mars_facts_url = "http://space-facts.com/mars/"
+
+# Use Pandas to convert the data to a HTML table string
+mars_facts = pd.read_html(mars_facts_url)
+
+# Save as DataFrame
+mars_facts_df = pd.DataFrame(mars_facts[1])
+
+#  Save DataFrame to html
+mars_facts = mars_facts_df.to_html(header = True, index = True)
+
+""" Mars Hemispheres """
+# Connect to the image URL
+browser = init_browser()
+
+mars_hemispheres_url = "http://marshemispheres.com/"
+browser.visit(mars_hemispheres_url)
+
+# Parse HTML with Beautiful Soup
+hemispheres_soup = bs(html, "html.parser")
+
+# HTML Object
+html = browser.html
+
+# Each link is located in "div" tag, class "item"
+# Locate all 4 elements and store in variable.
+hems_url = hemispheres_soup.find_all("div", class_ = "item")
+
+# Create empty list for each Hemisphere URL
+hemis_url = []
+
+for hem in hems_url:
+    hem_url = hem.find("a")["href"]
+    hemis_url.append(hem_url)
+
+# Exit Browser
+browser.quit()
+
+# Create list of dictionaries called hemisphere_image_urls
+hemisphere_image_urls = []
+
+# Iterate through all URLs saved in hemis_url
+for hemi in hemis_url:
+    mars_hem_url = mars_hemispheres_url + hemi
+    print(mars_hem_url)
+    
+    # Run init_browser/driver.
+    browser = init_browser()
+    browser.visit(mars_hem_url)
+    
+    # HTML Object.
+    html = browser.html
+
+    # Parse HTML with Beautiful Soup
+    hemi_soup = bs(html, "html.parser")
+
+    # Locate each title and save to raw_title, to be cleaned.
+    raw_title = hemi_soup.find("h2", class_="title").text
+    
+    # Remove ' Enhanced' tag text from each "title" via split on ' Enhanced'.
+    title = raw_title.split(' Enhanced')[0]
+    
+    # Locate each 'full.jpg' for all 4 Hemisphere URLs.
+    img_url = hemi_soup.find("img", class_ = "wide-image")['src']
+    
+    # Append both title and img_url to 'hemisphere_image_url'.
+    hemisphere_image_urls.append({'title': title, 'img_url': mars_hemispheres_url + img_url})
+    
+    # Exit Browser
+    browser.quit()
+
+    pprint(hemisphere_image_urls)
