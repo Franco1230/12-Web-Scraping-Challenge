@@ -1,85 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Mission to Mars</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head> 
-<body class="text-white" style="background-color: grey;">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission to Mars</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <!-- All Black Background -->
+    <style>
+      body {
+        background-color: purple;
+      }
+    </style>
+  </head>
+
+  <!-- Create Container -->
+  <body>
     <div class="container">
-        <!-- Jumbotron -->
-        <!--IMAGES: https://images5.alphacoders.com/508/508358.jpg / https://vfxblog.com/wp-content/uploads/2016/12/marsattacks1b.jpg / https://i.gifer.com/embedded/download/NRfS.gif -->
-        <div class="jumbotron text-center" style="background-image: url(https://astropedia.astrogeology.usgs.gov/download/Mars/Viking/cerberus_enhanced.tif/full.jpg); height: 400px; background-position: center; background-size: cover;">
-            <h1 class="display-3"><b>Mission to Mars</b></h1>
-            <p><a class="btn btn-danger btn-lg" href="/scrape" role="button">Scrape New Data</a></p>
-        </div>
-        <!-- NASA Mars News -->
-        <div class="container">
-            <div class="row" id="mars-news">
-                <div class="media">
-                    <div class="media-body">
-                        <h4>Latest Mars News</h4>
-                        <h5 style="color: #DC143C">{{mars.news_title}}</h5>
-                        <p style="color: #8B0000">{{mars.news_paragraph}}</p>
-                    </div>
-                </div>
+        <!-- Add Jumbotron w/ Image URL -->
+        <div class="jumbotron text-center" style="background-image: url(https://news.cgtn.com/news/3d3d414f7a45544f34457a6333566d54/img/3358de90f79c48beb04f693f990ee0d4/3358de90f79c48beb04f693f990ee0d4.jpg); background-size: 100%; height: 500px;">
+          <h1 class="display-4" style="color: white">Mission to Mars</h1>
+          <!-- Add Button with link to mars_app -->
+          <a class="btn btn-lg text-white" style="background-color:grey; color: white" href="/scrape" role="button">Scrape Mars Data</a>
+      </div>
+
+      <!-- Add Recent News -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="media">
+            <div class="media-body">
+              <h2 style="color: white"><b>Most Recent Mars News</b></h2>
+              <h4 class="media-heading" style="color: white"><b>{{mars.news_title}}</b></h4>
+              <h5 style="color: white"><p>{{mars.news_paragraph}}</p></h5>
             </div>
-        </div>   
-        <!-- JPL Mars Space Images - Featured Image -->
-        <div class="container">
-            <div class="row" id="mars-featured-image">
-                <div class="col-lg-8 col-md-8 col-sm-12">
-                <h4>Featured Mars Image</h4>
-                    <!-- If Images are False/None/Non-Existent, Then Default to Error Message -->
-                    <img src="{{mars.featured_image | default('static/images/error.png', true) }}" class="img-responsive" style="max-width:100%; max-height: auto;" alt="Mars Featured Image"/>
-                </div>
-                <!-- Mars Weather -->
-                <div class="col-lg-4 col-md-4 col-sm-12" id="mars-weather">
-                    <div class="card" style="max-width: 18rem;">
-                        <div class="card-body text-white bg-danger">
-                            <h4 class="card-title">Current Weather on Mars</h4>
-                            <p class="card-text">{{mars.weather}}</p>
-                        </div>
-                    </div>
-                    <!-- Mars Facts -->
-                    <br>
-                    <div class="row" id="mars-facts">
-                        <div class="col-md-12">
-                            <h4>Mars Facts</h4>
-                            {{mars.facts | safe}}
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-        <!-- Mars Hemispheres -->
-        <h4 style="padding-top: 50px; margin-top: 100px; text-align: center;">Mars Hemispheres</h4>
-        <div class="card-deck">
-            <hr>
-            <div class="col-md-12">
-                <div class="row" id="mars-hemispheres">
-                    {% for hemisphere in mars.hemispheres %}
-                    <div class="col-md-6">
-                        <div class="card text-white bg-danger" style="margin: 30px;">
-                            <!-- If Images are False/None/Non-Existent, Then Default to Error Message -->
-                            <img class="card-img-top" src="{{hemisphere.img_url | default('static/images/error.png', true)}}" alt="..."/>
-                            <div class="card-body">
-                                <p class="card-text">{{hemisphere.title}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+      </div>
+
+      <!-- Add Featured Image -->
+      <div class="row">
+        <div class="col-md-9">
+          <h2 style="color: white"><b>Featured Mars Image</b></h2>
+            <img src="{{mars.featured_image_url}}" class="img-responsive">
         </div>
+        
+          <!-- Add Mars HTML Facts Table - Safe used to show table data -->
+          <div class="row">
+            <h3 style="color: white">Mars Facts</h3>
+            <div class="col-md-12" style="color: white">
+              {{mars.mars_facts | safe}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 80px;">
+        <div class="page-header">
+          <h2 class="text-center" style="color: white"><b>Mars Hemispheres</b></h2>
+        </div>
+        {% for hemisphere in mars.hemisphere_image_urls %}
+          <div class="col-md-6">
+            <div class="thumbnail">
+              <img src="{{hemisphere.img_url}}">
+              <div class="caption">
+                <h3><b>{{hemisphere.title}}</b></h3>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
     </div>
-    <!-- Bootstrap JavaScript -->
-    <!-- jQuery, Popper.js & Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
-</html>
+  </body>
+  </html>
