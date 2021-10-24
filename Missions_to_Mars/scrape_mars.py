@@ -3,7 +3,7 @@ import pandas as pd
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
 from webdriver_manager.chrome import ChromeDriverManager
-from pprint import pprint
+
 
 # Define function to choose the executable path
 def init_browser():
@@ -37,6 +37,7 @@ def scrape():
     news_paragraph = news_paragraph.text.strip()
     print(news_paragraph)
 
+
     """ JPL Mars Space Images - Featured Image """
     # Connect to the image URL
     mars_featured_image_url = "http://spaceimages-mars.com/"
@@ -53,6 +54,7 @@ def scrape():
     featured_image_url = mars_featured_image_url + featured_image["src"]
     print(featured_image_url)
 
+
     """ Mars Facts """
     # URL for Mars Facts.
     mars_facts_url = "http://space-facts.com/mars/"
@@ -66,6 +68,7 @@ def scrape():
     #  Save DataFrame to html
     mars_facts = mars_facts_df.to_html(header = True, index = True)
 
+
     """ Mars Hemispheres """
     # Visit the url for Mars Hemisphere
     mars_hemispheres_url = "http://marshemispheres.com/"
@@ -77,9 +80,9 @@ def scrape():
     # Parse HTML with Beautiful Soup
     hemispheres_soup = bs(html, "html.parser")
 
-    # Each link is located in "div" tag, class "item"
-    # Locate all 4 elements and store in variable
-    hems_url = hemispheres_soup.find_all("div", class_ = "item")
+    # Each link is located in "div" tag, class "description"
+    # Find all elements and store in variable
+    hems_url = hemispheres_soup.find_all("div", class_ = "description")
 
     # Create empty list for each Hemisphere URL
     hemis_url = []
@@ -121,3 +124,23 @@ def scrape():
     browser.quit()
 
     print(hemisphere_image_urls)
+
+    
+    """ Mars Data Dictionary - MongoDB """
+    # Create dictionary for all Mars Data.
+    mars_data = {}
+
+    # Append news_title and news_paragraph to mars_data
+    mars_data["news_title"] = news_title
+    mars_data["news_paragraph"] = news_paragraph
+
+    # Append featured_image_url to mars_data.
+    mars_data["featured_image_url"] = featured_image_url
+
+    # Append mars_facts to mars_data.
+    mars_data["mars_facts"] = mars_facts
+
+    # Append hemisphere_image_urls to mars_data.
+    mars_data["hemisphere_image_urls"] = hemisphere_image_urls
+
+    return mars_data
