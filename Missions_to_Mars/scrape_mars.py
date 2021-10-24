@@ -10,12 +10,16 @@ def init_browser():
     executable_path = {"executable_path": ChromeDriverManager().install()}
     return Browser("chrome", **executable_path, headless = False, user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36")
 
-# Full Scrape function.
+# Set variable for multiple use string
+parser = "html.parser"
+
+# Full Scrape function
 def scrape():
 
     # Connect to Mars News Site
     browser = init_browser()
     
+
     """ NASA Mars News """
     # Visit to Mars News Site
     mars_news_url = "http://redplanetscience.com"
@@ -25,7 +29,7 @@ def scrape():
     html = browser.html
 
     # Parse HTML with Beautiful Soup
-    news_soup = bs(html, "html.parser")    
+    news_soup = bs(html, parser)    
 
     # Retrieve the latest article's title
     news_title = news_soup.find("div", class_ = "content_title")
@@ -39,7 +43,7 @@ def scrape():
 
 
     """ JPL Mars Space Images - Featured Image """
-    # Connect to the image URL
+    # Connection to JPL Mars Space Images - Featured Image
     mars_featured_image_url = "http://spaceimages-mars.com/"
     browser.visit(mars_featured_image_url)
 
@@ -47,7 +51,7 @@ def scrape():
     html = browser.html
 
     # Parse HTML with Beautiful Soup
-    image_soup = bs(html, "html.parser")
+    image_soup = bs(html, parser)
 
     # Assign the full url string to a variable called "featured_image_url"
     featured_image = image_soup.find("img", class_ = "headerimage fade-in")
@@ -56,7 +60,7 @@ def scrape():
 
 
     """ Mars Facts """
-    # URL for Mars Facts.
+    # URL for Mars Facts
     mars_facts_url = "http://space-facts.com/mars/"
 
     # Use Pandas to convert the data to a HTML table string
@@ -74,11 +78,11 @@ def scrape():
     mars_hemispheres_url = "http://marshemispheres.com/"
     browser.visit(mars_hemispheres_url)
 
-    # HTML Object.
+    # HTML Object
     html = browser.html
 
     # Parse HTML with Beautiful Soup
-    hemispheres_soup = bs(html, "html.parser")
+    hemispheres_soup = bs(html, parser)
 
     # Each link is located in "div" tag, class "description"
     # Find all elements and store in variable
@@ -87,6 +91,7 @@ def scrape():
     # Create empty list for each Hemisphere URL
     hemis_url = []
 
+    # Append all URL
     for hem in hems_url:
         hem_url = hem.find("a")["href"]
         hemis_url.append(hem_url)
@@ -106,7 +111,7 @@ def scrape():
         html = browser.html
 
         # Parse HTML with Beautiful Soup
-        hemi_soup = bs(html, "html.parser")
+        hemi_soup = bs(html, parser)
 
         # Locate each title and save to raw_title, to be cleaned
         raw_title = hemi_soup.find("h2", class_ = "title").text
@@ -114,7 +119,7 @@ def scrape():
         # Remove " Enhanced" tag text from each "title" via split on " Enhanced"
         title = raw_title.split(" Enhanced")[0]
         
-        # Locate each full resolution image for all 4 Hemisphere URLs
+        # Find all full-resolution image for all Hemisphere URLs
         img_url = hemi_soup.find("img", class_ = "wide-image")["src"]
         
         # Append title and img_url to "hemisphere_image_url"
@@ -127,20 +132,20 @@ def scrape():
 
     
     """ Mars Data Dictionary - MongoDB """
-    # Create dictionary for all Mars Data.
+    # Create dictionary for all Mars Data
     mars_data = {}
 
     # Append news_title and news_paragraph to mars_data
     mars_data["news_title"] = news_title
     mars_data["news_paragraph"] = news_paragraph
 
-    # Append featured_image_url to mars_data.
+    # Append featured_image_url to mars_data
     mars_data["featured_image_url"] = featured_image_url
 
-    # Append mars_facts to mars_data.
+    # Append mars_facts to mars_data
     mars_data["mars_facts"] = mars_facts
 
-    # Append hemisphere_image_urls to mars_data.
+    # Append hemisphere_image_urls to mars_data
     mars_data["hemisphere_image_urls"] = hemisphere_image_urls
 
     return mars_data
