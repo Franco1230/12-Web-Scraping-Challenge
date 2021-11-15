@@ -1,6 +1,3 @@
-# Please [click here](https://franco1230.github.io/12-Web-Scraping-Challenge/Missions_to_Mars/templates/) to [start scraping]()
-
-
 # Web Scraping Homework - Mission to Mars
 
 ![mission_to_mars](Images/mission_to_mars.png)
