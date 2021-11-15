@@ -1,4 +1,4 @@
-# Please [click here]() to [start scraping]()
+# Please [click here](12-Web-Scraping-Challenge/Missions_to_Mars/templates/) to [start scraping]()
 
 
 # Web Scraping Homework - Mission to Mars
